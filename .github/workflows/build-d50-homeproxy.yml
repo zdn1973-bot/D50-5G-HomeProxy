@@ -51,8 +51,10 @@ jobs:
           rm -rf package/feeds/packages/sing-box
           rm -rf feeds/luci/applications/luci-app-homeproxy
           rm -rf package/feeds/luci/luci-app-homeproxy
+          rm -rf package/chinadns-ng
           cp -a custom-packages/sing-box package/sing-box
           cp -a custom-packages/luci-app-homeproxy package/luci-app-homeproxy
+          cp -a custom-packages/chinadns-ng package/chinadns-ng
 
       - name: Configure D50
         run: |
