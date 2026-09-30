@@ -67,7 +67,7 @@ jobs:
           grep -E '^CONFIG_PACKAGE_(luci-app-homeproxy|sing-box|kmod-nft-tproxy|kmod-nft-socket|kmod-tun|chinadns-ng)=' .config || true
           echo "=== KERNEL TPROXY CONFIG ==="
           grep -E '^CONFIG_(NF_TPROXY_IPV4|NF_TPROXY_IPV6|NETFILTER_XT_TARGET_TPROXY|NF_SOCKET_IPV4|NF_SOCKET_IPV6|NETFILTER_XT_MATCH_SOCKET|NFT_SOCKET|NFT_TPROXY)=' target/linux/qualcommax/config-6.12 || true
-          test "$(grep -c '^CONFIG_TARGET_DEVICE_qualcommax_ipq50xx_DEVICE_xunison_exigo_hub_d50_5g=y' .config)" -eq 1
+          test "$(grep -c '^CONFIG_TARGET_DEVICE_qualcommax_ipq50xx_DEVICE_xunison_exigo-hub-d50-5g=y' .config)" -eq 1
           test "$(grep -c '^CONFIG_TARGET_DEVICE_qualcommax_ipq50xx_DEVICE_.*=y' .config)" -eq 1
           test "$(grep -c '^CONFIG_PACKAGE_luci-app-homeproxy=y' .config)" -eq 1
           test "$(grep -c '^CONFIG_PACKAGE_sing-box=y' .config)" -eq 1
