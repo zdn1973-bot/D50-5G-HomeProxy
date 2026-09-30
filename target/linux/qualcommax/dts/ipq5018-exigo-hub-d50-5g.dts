@@ -7,6 +7,14 @@
 #include <dt-bindings/input/input.h>
 #include <dt-bindings/leds/common.h>
 
+/* Keep UNIPHY constants available on legacy qualcommax trees. */
+#ifndef UNIPHY_CLK_REF
+#define UNIPHY_CLK_REF 2
+#endif
+#ifndef UNIPHY_REFCLK_25MHZ
+#define UNIPHY_REFCLK_25MHZ 25000000
+#endif
+
 / {
 	model = "Xunison Exigo Hub D50 5G";
 	compatible = "xunison,exigo-hub-d50-5g", "qcom,ipq5018";
