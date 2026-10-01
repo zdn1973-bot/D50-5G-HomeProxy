@@ -121,6 +121,7 @@ jobs:
 
       - name: Force legacy HomeProxy package selections after defconfig
         run: |
+          sed -i '/^CONFIG_PACKAGE_\(luci=y\|luci-ssl=y\|luci-app-homeproxy=y\|sing-box=y\|chinadns-ng=y\|kmod-nf-conntrack=y\|kmod-nf-tproxy=y\|kmod-nf-socket=y\|kmod-nft-tproxy=y\|kmod-nft-socket=y\|kmod-tun=y\|kmod-inet-diag=y\|unzip=y\|firewall4=y\|nftables-json=y\|ca-bundle=y\)$/d' .config
           cat >> .config <<'EOF'
           CONFIG_PACKAGE_luci=y
           CONFIG_PACKAGE_luci-ssl=y
