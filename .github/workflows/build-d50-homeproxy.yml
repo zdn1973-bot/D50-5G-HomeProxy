@@ -72,12 +72,14 @@ jobs:
           while True:
               pos=b.find(b'\xd0\x0d\xfe\xed',pos)
               if pos < 0: break
-              size=struct.unpack('>I',b[pos+4:pos+8])[0]
-              if 20000 <= size <= 100000: hits.append((pos,size))
+              if pos+8 <= len(b):
+                  size=struct.unpack('>I',b[pos+4:pos+8])[0]
+                  if 20000 <= size <= 100000 and b[pos:pos+size].find(b'xunison,exigo-hub-d50-5g') >= 0:
+                      hits.append((pos,size))
               pos += 4
           if not hits: raise SystemExit('D50 board DTB not found')
-          off,size=hits[-1]
-          print(f'DTB offset={off} size={size}')
+          off,size=hits[0]
+          print(f'D50 board DTB offset={off} size={size}')
           open('/tmp/d50-board.dtb','wb').write(b[off:off+size])
           PY
           dtc -I dtb -O dts -o target/linux/qualcommax/dts/ipq5018-exigo-hub-d50-5g.dts /tmp/d50-board.dtb
