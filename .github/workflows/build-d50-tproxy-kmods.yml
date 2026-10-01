@@ -2,6 +2,9 @@ name: Build D50 5G TPROXY kernel packages
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - d50-homeproxy-2024031600
 
 permissions:
   contents: read
