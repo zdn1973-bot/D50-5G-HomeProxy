@@ -20,9 +20,9 @@
 	compatible = "xunison,exigo-hub-d50-5g", "qcom,ipq5018";
 
 	aliases {
-		ethernet0 = &gmac0;
-		ethernet1 = &gmac1;
-		label-mac-device = &gmac1;
+		ethernet0 = &dp1;
+		ethernet1 = &dp2;
+		label-mac-device = &dp2;
 		led-boot = &led_mesh_g;
 		led-failsafe = &led_mesh_r;
 		led-running = &led_mesh_g;
@@ -31,7 +31,7 @@
 	};
 
 	chosen {
-    		bootargs = "console=ttyMSM0,115200n8 ubi.mtd=rootfs ubi.block=0,1 root=/dev/ubiblock0_1 rootfstype=squashfs rootwait swiotlb=1 coherent_pool=2M pcie_port_pm=off";
+ 		bootargs = "console=ttyMSM0,115200n8 ubi.mtd=rootfs ubi.block=0,1 root=/dev/ubiblock0_1 rootfstype=squashfs rootwait swiotlb=1 coherent_pool=2M pcie_port_pm=off";
 		stdout-path = "serial0:115200n8";
 	};
 	
@@ -95,15 +95,7 @@
 			gpios = <&tlmm 35 GPIO_ACTIVE_HIGH>;
 		};
 
-                /*
-		wifi-green {
-			color = <LED_COLOR_ID_GREEN>;
-			function = LED_FUNCTION_WLAN;
-			gpios = <&tlmm 30 GPIO_ACTIVE_HIGH>;
-		};
-                */
-
-                // Alternative Wi-Fi LED control
+		// Alternative Wi-Fi LED control
 		wifi-green {
 			color = <LED_COLOR_ID_GREEN>;
 			function = LED_FUNCTION_WLAN;
@@ -111,7 +103,7 @@
 			linux,default-trigger = "network";
 		};
 		
-                // Alternative WAN LED control
+		// Alternative WAN LED control
 		wan-green {
 			color = <LED_COLOR_ID_GREEN>;
 			function = LED_FUNCTION_WAN;
@@ -126,29 +118,18 @@
 	};
 };
 
-&uniphy0 {
+// dp1 replaces uniphy0/gmac0 (WAN)
+&dp1 {
 	status = "okay";
-
-	assigned-clocks = <&uniphy0 UNIPHY_CLK_REF>;
-	assigned-clock-rates = <UNIPHY_REFCLK_25MHZ>;
-};
-
-// MAC0 -> GE Phy (WAN)
-&gmac0 {
 	nvmem-cells = <&macaddr_gmac0 0>;
 	nvmem-cell-names = "mac-address";
-
 	label = "wan";
-
-	status = "okay";
 };
 
-// MAC1 ---SGMII---> QCA8337 SerDes
-&gmac1 {
+// dp2 replaces gmac1 ---SGMII---> QCA8337 SerDes
+&dp2 {
 	status = "okay";
-
 	phy-mode = "sgmii";
-
 	nvmem-cells = <&macaddr_gmac1 0>;
 	nvmem-cell-names = "mac-address";
 
@@ -198,7 +179,7 @@
 				reg = <0>;
 				label = "cpu";
 				phy-mode = "sgmii";
-				ethernet = <&gmac1>;
+				ethernet = <&dp2>;
 				qca,sgmii-enable-pll;
 
 				fixed-link {
