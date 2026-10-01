@@ -51,14 +51,14 @@ jobs:
           rm -rf package/feeds/packages/sing-box
           rm -rf feeds/luci/applications/luci-app-homeproxy
           rm -rf package/feeds/luci/luci-app-homeproxy
-          rm -rf package/chinadns-ng
           rm -rf feeds/packages/net/chinadns-ng
-          mkdir -p feeds/packages/net
+          rm -rf package/feeds/packages/chinadns-ng
+          rm -rf package/chinadns-ng
           cp -a custom-packages/sing-box package/sing-box
           cp -a custom-packages/luci-app-homeproxy package/luci-app-homeproxy
-          cp -a custom-packages/chinadns-ng feeds/packages/net/chinadns-ng
-          test -f feeds/packages/net/chinadns-ng/Makefile
-          grep -q 'Package/chinadns-ng' feeds/packages/net/chinadns-ng/Makefile
+          cp -a custom-packages/chinadns-ng package/chinadns-ng
+          test -f package/chinadns-ng/Makefile
+          grep -q 'Package/chinadns-ng' package/chinadns-ng/Makefile
 
       - name: Configure D50
         run: |
@@ -96,7 +96,7 @@ jobs:
       - name: Show firmware
         if: success()
         run: |
-          find bin/targets/qualcommax/ipq50xx -maxdepth 1 -type f -printf '%f %k KB\\n' | sort
+          find bin/targets/qualcommax/ipq50xx -maxdepth 1 -type f -printf '%f %k KB\n' | sort
           find bin/targets/qualcommax/ipq50xx -type f \( -name '*factory*' -o -name '*sysupgrade*' \) -print
 
       - name: Upload firmware
