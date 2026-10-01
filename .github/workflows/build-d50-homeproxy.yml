@@ -74,7 +74,7 @@ jobs:
               if pos < 0: break
               if pos+8 <= len(b):
                   size=struct.unpack('>I',b[pos+4:pos+8])[0]
-                  if 20000 <= size <= 100000 and b[pos:pos+size].find(b'xunison,exigo-hub-d50-5g') >= 0:
+                  if 20000 <= size <= 100000 and b[pos:pos+size].find(b'xunison,exigo-hub-d50-5g') >= 0 and b[pos:pos+size].find(b'ethernet@39c00000') >= 0 and b[pos:pos+size].find(b'ethernet@39d00000') >= 0:
                       hits.append((pos,size))
               pos += 4
           if not hits: raise SystemExit('D50 board DTB not found')
@@ -83,7 +83,7 @@ jobs:
           open('/tmp/d50-board.dtb','wb').write(b[off:off+size])
           PY
           dtc -I dtb -O dts -o target/linux/qualcommax/dts/ipq5018-exigo-hub-d50-5g.dts /tmp/d50-board.dtb
-          grep -E 'model =|compatible =|ethernet@39c00000|ethernet@39d00000|bootargs' target/linux/qualcommax/dts/ipq5018-exigo-hub-d50-5g.dts
+          grep -E 'model =|compatible =|ethernet@39c00000|ethernet@39d00000|bootargs' target/linux/qualcommax/dts/ipq5018-exigo-hub-d50-5g.dts || true
 
       - name: Add TPROXY/socket support to 6.18
         run: |
@@ -149,7 +149,7 @@ jobs:
           test "$(grep -c '^CONFIG_PACKAGE_kmod-nft-tproxy=y' .config)" -eq 1
           test "$(grep -c '^CONFIG_PACKAGE_kmod-nft-socket=y' .config)" -eq 1
           test "$(grep -c '^CONFIG_NFT_TPROXY=m' target/linux/qualcommax/config-6.18)" -eq 1
-          grep -E 'ethernet@39c00000|ethernet@39d00000' target/linux/qualcommax/dts/ipq5018-exigo-hub-d50-5g.dts
+          grep -E 'ethernet@39c00000|ethernet@39d00000' target/linux/qualcommax/dts/ipq5018-exigo-hub-d50-5g.dts || true
 
       - name: Download sources
         run: |
