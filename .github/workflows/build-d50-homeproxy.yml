@@ -160,6 +160,23 @@ jobs:
       - name: Build firmware
         run: make -j$(nproc) world V=s
 
+      - name: Verify packages are actually embedded
+        if: success()
+        run: |
+          MANIFEST=$(find bin/targets/qualcommax/ipq50xx -maxdepth 1 -name '*.manifest' -print -quit)
+          test -n "$MANIFEST"
+          echo "===== IMAGE MANIFEST ====="
+          cat "$MANIFEST"
+          for p in luci-app-homeproxy sing-box chinadns-ng kmod-nf-conntrack kmod-nf-tproxy kmod-nf-socket kmod-nft-tproxy kmod-nft-socket kmod-tun kmod-inet-diag; do
+            grep -q "^${p} " "$MANIFEST" || { echo "ERROR: ${p} is NOT embedded in the firmware manifest"; exit 1; }
+          done
+          echo "===== CUSTOM PACKAGE FILES ====="
+          find bin/packages -type f \( -name '*homeproxy*.apk' -o -name 'sing-box*.apk' -o -name 'chinadns-ng*.apk' -o -name 'kmod-nft-tproxy*.apk' -o -name 'kmod-nft-socket*.apk' \) -print | sort
+          test -n "$(find bin/packages -type f -name '*homeproxy*.apk' -print -quit)"
+          test -n "$(find bin/packages -type f -name 'sing-box*.apk' -print -quit)"
+          test -n "$(find bin/packages -type f -name 'kmod-nft-tproxy*.apk' -print -quit)"
+          test -n "$(find bin/packages -type f -name 'kmod-nft-socket*.apk' -print -quit)"
+
       - name: Inspect firmware
         if: success()
         run: |
@@ -176,6 +193,8 @@ jobs:
             bin/targets/qualcommax/ipq50xx/*factory*
             bin/targets/qualcommax/ipq50xx/*sysupgrade*
             bin/targets/qualcommax/ipq50xx/sha256sums
+            bin/targets/qualcommax/ipq50xx/*.manifest
+            .config
           if-no-files-found: error
           retention-days: 14
 
