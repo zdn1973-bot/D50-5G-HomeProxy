@@ -43,6 +43,11 @@ jobs:
           rm -rf files
           mkdir -p files
           tar -xzvf d50_ready_files.tar.gz -C files/
+          # Remove files that collide with package installations to prevent Error 2
+          rm -f files/usr/bin/quectel-CM-M \
+                files/lib/netifd/proto/quectel.sh \
+                files/usr/sbin/rssileds \
+                files/usr/libexec/led-trigger/rssi
           rm -f files/etc/modem/atcmmds.user \
                 files/etc/modem/atinoutatcommands.user \
                 files/etc/modem/log.txt \
@@ -54,7 +59,7 @@ jobs:
             files/usr/bin/ \
             files/usr/sbin/ \
             files/usr/share/xunison/ \
-            files/lib/netifd/proto/
+            files/lib/netifd/proto/ || true
 
       - name: Configure Clean Build
         run: |
