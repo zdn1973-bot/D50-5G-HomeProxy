@@ -35,8 +35,8 @@ jobs:
           grep -q "modemfeed" feeds.conf.default || echo "src-git modemfeed https://github.com/koshev-msk/modemfeed.git" >> feeds.conf.default
           ./scripts/feeds update -a
           find feeds/ -name "CMakeLists.txt" -exec sed -i 's/3\.31/3.30/g; s/3\.32/3.30/g' {} +
+          find feeds/luci/ package/ -type f \( -name "Makefile" -o -name "*.mk" \) -exec sed -i 's/ucode (>=[^)]*)/ucode/g' {} +
           ./scripts/feeds install -a
-          find package/ feeds/ -type f \( -name "Makefile" -o -name "*.mk" \) -exec sed -i 's/ucode (>=[^)]*)/ucode/g' {} +
 
       - name: Extract Custom Hardware Files Safely
         run: |
@@ -78,8 +78,8 @@ jobs:
           CONFIG_PACKAGE_luci-app-v2raya=y
           CONFIG_PACKAGE_luci-i18n-v2raya-ar=y
           CONFIG_PACKAGE_xray-core=y
-          CONFIG_PACKAGE_v2ray-geoip=y
-          CONFIG_PACKAGE_v2ray-geosite=y
+          # CONFIG_PACKAGE_v2ray-geoip is not set
+          # CONFIG_PACKAGE_v2ray-geosite is not set
 
           CONFIG_PACKAGE_kmod-nft-tproxy=y
           CONFIG_PACKAGE_kmod-nft-socket=y
