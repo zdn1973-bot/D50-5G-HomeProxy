@@ -37,10 +37,17 @@ jobs:
           find feeds/ -name "CMakeLists.txt" -exec sed -i 's/3\.31/3.30/g; s/3\.32/3.30/g' {} +
           ./scripts/feeds install -a
 
-      - name: Extract Custom Hardware Files
+      - name: Extract Custom Hardware Files Safely
         run: |
+          rm -rf files
           mkdir -p files
           tar -xzvf d50_ready_files.tar.gz -C files/
+          rm -f files/etc/modem/atcmmds.user \
+                files/etc/modem/atinoutatcommands.user \
+                files/etc/modem/log.txt \
+                files/etc/modem/modemlist.json \
+                files/etc/modem/phonebook.user \
+                files/etc/modem/ussdcodes.user
           chmod -R +x files/etc/init.d/ \
             files/etc/uci-defaults/ \
             files/usr/bin/ \
@@ -48,14 +55,23 @@ jobs:
             files/usr/share/xunison/ \
             files/lib/netifd/proto/
 
-      - name: Configure Build
+      - name: Configure Clean Build
         run: |
-          cat << 'EOF' >> .config
+          rm -f .config
+          cat << 'EOF' > .config
           CONFIG_TARGET_qualcommax=y
           CONFIG_TARGET_qualcommax_ipq50xx=y
           CONFIG_TARGET_qualcommax_ipq50xx_DEVICE_xunison_exigo-hub-d50-5g=y
           CONFIG_DEVEL=y
           CONFIG_KERNEL_DEVMEM=y
+
+          CONFIG_PACKAGE_ipq-wifi-xunison_exigo-hub-d50-5g=y
+          CONFIG_PACKAGE_ath11k-firmware-ipq5018=y
+          CONFIG_PACKAGE_ath11k-firmware-qcn9074=y
+          CONFIG_PACKAGE_kmod-ath11k=y
+          CONFIG_PACKAGE_kmod-ath11k-ahb=y
+          CONFIG_PACKAGE_kmod-ath11k-pci=y
+          CONFIG_PACKAGE_wpad-basic-mbedtls=y
 
           CONFIG_PACKAGE_v2raya=y
           CONFIG_PACKAGE_luci-app-v2raya=y
@@ -110,16 +126,12 @@ jobs:
           CONFIG_PACKAGE_luci-app-filemanager=y
           CONFIG_PACKAGE_luci-app-commands=y
           CONFIG_PACKAGE_luci-app-cpu-status=y
-          CONFIG_PACKAGE_luci-app-cpu-perf=y
           CONFIG_PACKAGE_curl=y
           CONFIG_PACKAGE_jq=y
           CONFIG_PACKAGE_unzip=y
           CONFIG_PACKAGE_ca-bundle=y
           CONFIG_PACKAGE_ca-certificates=y
           CONFIG_PACKAGE_uboot-envtools=y
-
-          # CONFIG_PACKAGE_luci-app-homeproxy is not set
-          # CONFIG_PACKAGE_sing-box is not set
           EOF
           make defconfig
           grep -E "CONFIG_PACKAGE_(v2raya|xray-core|kmod-nft-tproxy|zram-swap)" .config
