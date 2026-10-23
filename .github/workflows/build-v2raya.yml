@@ -35,8 +35,8 @@ jobs:
           grep -q "modemfeed" feeds.conf.default || echo "src-git modemfeed https://github.com/koshev-msk/modemfeed.git" >> feeds.conf.default
           ./scripts/feeds update -a
           find feeds/ -name "CMakeLists.txt" -exec sed -i 's/3\.31/3.30/g; s/3\.32/3.30/g' {} +
-          find feeds/luci/ -type f \( -name "Makefile" -o -name "*.mk" \) -exec sed -i 's/ucode (>= 202[0-9]\.[0-9]*\.[0-9]*)/ucode/g' {} +
           ./scripts/feeds install -a
+          find package/ feeds/ -type f \( -name "Makefile" -o -name "*.mk" \) -exec sed -i 's/ucode (>=[^)]*)/ucode/g' {} +
 
       - name: Extract Custom Hardware Files Safely
         run: |
