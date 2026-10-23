@@ -132,6 +132,7 @@ jobs:
 
       - name: Compile Firmware
         run: |
+          export LD_LIBRARY_PATH="$PWD/staging_dir/host/lib:$PWD/staging_dir/hostpkg/lib:$LD_LIBRARY_PATH"
           make -j$(nproc) || make -j1 V=s
 
       - name: Verify Output Size and Packages
