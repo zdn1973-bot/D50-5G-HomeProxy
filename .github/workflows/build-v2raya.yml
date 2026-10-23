@@ -29,11 +29,12 @@ jobs:
             python3-setuptools python3-pyelftools rsync swig unzip zlib1g-dev \
             file wget curl jq
 
-      - name: Add Custom Feeds
+      - name: Add Custom Feeds and Fix CMake Version
         run: |
           grep -q "Modem-extras" feeds.conf.default || echo "src-git iceg https://github.com/4IceG/Modem-extras.git" >> feeds.conf.default
           grep -q "modemfeed" feeds.conf.default || echo "src-git modemfeed https://github.com/koshev-msk/modemfeed.git" >> feeds.conf.default
           ./scripts/feeds update -a
+          find feeds/ -name "CMakeLists.txt" -exec sed -i 's/3\.31/3.30/g; s/3\.32/3.30/g' {} +
           ./scripts/feeds install -a
 
       - name: Extract Custom Hardware Files
